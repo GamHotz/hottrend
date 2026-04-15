@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>热点雷达 - TrendRadar</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .header h1 { font-size: 28px; margin-bottom: 8px; }
+        .header p { opacity: 0.9; font-size: 14px; }
+        .platform-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .platform-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #667eea;
+        }
+        .news-item {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .news-rank {
+            min-width: 28px;
+            height: 28px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            margin-right: 12px;
+        }
+        .news-title { color: #333; text-decoration: none; }
+        .news-title:hover { color: #667eea; }
+        .news-meta { font-size: 12px; color: #999; margin-top: 4px; }
+        .empty { text-align: center; padding: 40px; color: #999; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔥 热点雷达</h1>
+            <p>更新时间: <span th:text="${#temporals.format(updateTime, 'yyyy-MM-dd HH:mm:ss')}">--</span></p>
+        </div>
+
+        <div th:if="${groupedNews.empty}" class="empty">
+            <p>暂无新闻数据</p>
+        </div>
+
+        <div th:each="entry : ${groupedNews}" class="platform-card">
+            <div class="platform-title" th:text="${entry.key}">平台名</div>
+            <div th:each="item, stat : ${entry.value}" class="news-item">
+                <div class="news-rank" th:text="${stat.index + 1}">1</div>
+                <div>
+                    <a class="news-title" th:href="${item.url}" th:text="${item.title}" target="_blank">标题</a>
+                    <div class="news-meta">
+                        <span th:text="${item.platformName}">平台</span>
+                        <span th:if="${item.hotValue}" th:text="${' · ' + item.hotValue}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

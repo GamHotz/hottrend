@@ -1,0 +1,223 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: hottrend-spring
+
+  # 允许 Bean 覆盖（解决 Jackson 冲突）
+  main:
+    allow-bean-definition-overriding: true
+
+  # 数据源：MySQL
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/hottrends?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+#    hikari:
+#      maximum-pool-size: 10
+#      minimum-idle: 5
+#      idle-timeout: 30000
+#      connection-timeout: 20000
+
+  # Redis 配置
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 123456
+      database: 0
+      timeout: 5000
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+          max-wait: -1ms
+
+  # 缓存配置
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      cache-null-values: false
+
+  # MyBatis-Plus 配置
+  sql:
+    init:
+      mode: never
+
+  # Spring Boot Admin 配置
+  boot:
+    admin:
+      client:
+        enabled: false
+        url: http://localhost:8081  # Admin Server 地址
+        instance:
+          prefer-ip: true
+      # 登录凭据（可选）
+      # username: admin
+      # password: admin
+  ai:
+    openai:
+      enabled: true
+      base-url: https://integrate.api.nvidia.com/v1
+      api-key: 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
+
+    model:
+      chat: openai
+      options:
+        model: deepseek-ai/deepseek-v3.2
+        maxTokens: 4096
+
+# 应用配置
+app:
+  timezone: "Asia/Shanghai"
+  version: "1.0.0"
+
+# MyBatis-Plus 配置
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.hottrend.model
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    cache-enabled: true
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# Knife4j API 文档配置
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/api/**'
+      packages-to-scan: com.hottrend.controller
+
+knife4j:
+  enable: true
+  setting:
+    language: zh_CN  # 默认中文
+    swagger-model-name: 实体类列表
+  basic:
+    enable: false  # 是否开启认证
+    # username: admin
+    # password: 123456
+
+# Actuator 监控端点配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'  # 暴露所有端点
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+  health:
+    redis:
+      enabled: true
+    db:
+      enabled: true
+
+# 调度配置
+scheduler:
+  enabled: true
+  preset: "morning_evening" # always_on, morning_evening, office_hours, night_owl, custom
+
+# 数据源配置
+platforms:
+  enabled: true
+  sources:
+    - id: "toutiao"
+      name: "今日头条"
+      enabled: true
+    - id: "baidu"
+      name: "百度热搜"
+      enabled: true
+    - id: "weibo"
+      name: "微博"
+      enabled: true
+    - id: "bilibili-hot-search"
+      name: "B站热搜"
+      enabled: true
+    - id: "zhihu"
+      name: "知乎"
+      enabled: true
+    - id: "douyin"
+      name: "抖音"
+      enabled: true
+
+# RSS 配置
+rss:
+  enabled: true
+
+# 翻译配置
+translation:
+  enabled: false
+  target-language: "zh-CN"
+
+# 通知渠道配置
+notification:
+  # 微信公众号
+  wechat-mp:
+    enabled: false
+    app-id: "***"      # 微信公众号AppID
+    app-secret: "***"  # 微信公众号AppSecret
+    account-id: "***"  # 微信公众号原始ID (gh_xxx)
+  # 企业微信
+  wecom:
+    enabled: false
+    webhook-url: ""
+  # Telegram
+  telegram:
+    enabled: false
+    bot-token: ""
+    chat-id: ""
+  # 钉钉
+  dingtalk:
+    enabled: false
+    webhook-url: ""
+  # 飞书
+  feishu:
+    enabled: false
+    webhook-url: ""
+  # 邮件
+  email:
+    enabled: false
+    smtp-host: "smtp.qq.com"
+    smtp-port: 587
+    username: ""
+    password: ""
+    from: ""
+    to: ""
+
+# 存储配置
+storage:
+  local:
+    enabled: true
+    path: "./data"
+  remote:
+    enabled: false
+    type: "s3" # s3, oss, cos
+    bucket: ""
+    region: ""
+    access-key: ""
+    secret-key: ""
+
+logging:
+  level:
+    com.hottrend: DEBUG
+    org.springframework.web: INFO
+    org.springframework.cache: DEBUG
+    org.redisson: DEBUG
