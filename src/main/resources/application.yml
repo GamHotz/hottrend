@@ -63,7 +63,7 @@ spring:
     openai:
       enabled: true
       base-url: https://integrate.api.nvidia.com/v1
-      api-key: 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
+      api-key: *********
 
     model:
       chat: openai
@@ -172,9 +172,9 @@ notification:
   # 微信公众号
   wechat-mp:
     enabled: false
-    app-id: "***"      # 微信公众号AppID
-    app-secret: "***"  # 微信公众号AppSecret
-    account-id: "***"  # 微信公众号原始ID (gh_xxx)
+    app-id: "wx971a26bbc1060513"      # 微信公众号AppID
+    app-secret: "b0ac1ddc5e39f21ace6443e7e2e4ce13"  # 微信公众号AppSecret
+    account-id: "gh_12537644891f"  # 微信公众号原始ID (gh_xxx)
   # 企业微信
   wecom:
     enabled: false
